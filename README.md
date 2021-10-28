@@ -69,7 +69,7 @@ cd csi-driver-host-path
 ```
 Escola a versão do seu Kubernetes e faça o deploy 
 ```sh
-./deploy/kubernetes-1.18/deploy.sh
+./deploy/kubernetes-x.xx/deploy.sh
 ```
 # Verificar requisitos para instalação
 
