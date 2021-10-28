@@ -1,7 +1,5 @@
-#    Kubernetes Backup e Disaster Recovery 
-#         Kasten's K10 Platform
-
-# Kasten:
+# Kubernetes Backup e Disaster Recovery 
+# Kasten's K10 Platform
 
 A Kasten é uma empresa independente focada em soluções para plataforma Kubernetes, adquirida pela Veeam Backup recentemente, é líder premiado em Backup e recuperação de desastres do Kuberentes.
 
