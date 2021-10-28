@@ -1,0 +1,36 @@
+apigateway:
+  serviceResolver: endpoint
+auth:
+  tokenAuth:
+    enabled: true
+externalGateway:
+  create: true
+global:
+  persistence:
+    storageClass: managed-nfs-storage
+ingress:
+  class: traefik
+  create: true
+  host: k10.tcemt.tc.br
+  tls:
+    enabled: true
+    secretName: traefik-cert
+  urlPath: /k10
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true" 
+    traefik.ingress.kubernetes.io/router.tls.certresolver: default
+prometheus:
+  server:
+    persistentVolume:
+      storageClass: managed-nfs-storage
+    securityContext:
+      fsGroup: 0
+      runAsGroup: 0
+      runAsNonRoot: false
+      runAsUser: 0
+services:
+  securityContext:
+    fsGroup: 0
+    runAsUser: 0
+
