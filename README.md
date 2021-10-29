@@ -98,7 +98,7 @@ grafana:
 ingress:
   class: traefik
   create: true
-  host: k10.tcemt.tc.br
+  host: k10.<dominio.com.br>
   tls:
     enabled: true
     secretName: traefik-cert
