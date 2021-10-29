@@ -89,15 +89,16 @@ apigateway:
 auth:
   tokenAuth:
     enabled: true
-externalGateway:
-  create: true
 global:
+  persistence:
+    storageClass: managed-nfs-storage
+grafana:
   persistence:
     storageClass: managed-nfs-storage
 ingress:
   class: traefik
   create: true
-  host: k10.<dominio.com.br>
+  host: k10.tcemt.tc.br
   tls:
     enabled: true
     secretName: traefik-cert

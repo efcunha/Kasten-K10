@@ -3,9 +3,10 @@ apigateway:
 auth:
   tokenAuth:
     enabled: true
-externalGateway:
-  create: true
 global:
+  persistence:
+    storageClass: managed-nfs-storage
+grafana:
   persistence:
     storageClass: managed-nfs-storage
 ingress:
@@ -18,7 +19,7 @@ ingress:
   urlPath: /k10
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.tls: "true" 
+    traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/router.tls.certresolver: default
 prometheus:
   server:
@@ -33,4 +34,3 @@ services:
   securityContext:
     fsGroup: 0
     runAsUser: 0
-
