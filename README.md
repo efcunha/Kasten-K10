@@ -158,3 +158,4 @@ https://www.infracloud.io/blogs/k8s-disaster-recovery-using-kasten-k10/
 https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
 https://www.unixarena.com/2021/09/kubernetes-backup-kasten-k10-test-drive.html/
 https://veducate.co.uk/kasten-tanzu/
+
