@@ -142,8 +142,11 @@ Este token pode ser copiado para nossa área de transferência e copiado para o 
 
 ```sh  
 kubectl create serviceaccount kasten-sa --namespace kasten-io
+
 kubectl create clusterrolebinding kasten-sa --clusterrole=cluster-admin --serviceaccount=kasten-io:kasten-sa
+
 sa_secret=$(kubectl get serviceaccount kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
+
 kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
 # Varias leituras de referencias que podem ajudar em uma melhor implementação.
@@ -155,5 +158,3 @@ https://www.infracloud.io/blogs/k8s-disaster-recovery-using-kasten-k10/
 https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
 https://www.unixarena.com/2021/09/kubernetes-backup-kasten-k10-test-drive.html/
 https://veducate.co.uk/kasten-tanzu/
-
-
