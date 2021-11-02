@@ -152,10 +152,16 @@ kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'
 # Varias leituras de referencias que podem ajudar em uma melhor implementação.
 
 https://veducate.co.uk/kasten-multi-cluster/
+
 https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
+
 https://www.luizpessol.com.br/2021/07/28/backup-kubernetes-com-kasten-k10/
+
 https://www.infracloud.io/blogs/k8s-disaster-recovery-using-kasten-k10/
+
 https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
+
 https://www.unixarena.com/2021/09/kubernetes-backup-kasten-k10-test-drive.html/
+
 https://veducate.co.uk/kasten-tanzu/
 
