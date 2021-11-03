@@ -8,7 +8,7 @@ global:
     storageClass: managed-nfs-storage
 grafana:
   persistence:
-    storageClass: managed-nfs-storage
+    storageClassName: managed-nfs-storage
 ingress:
   class: traefik
   create: true
