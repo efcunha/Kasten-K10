@@ -94,11 +94,11 @@ global:
     storageClass: managed-nfs-storage
 grafana:
   persistence:
-    storageClass: managed-nfs-storage
+    storageClassName: managed-nfs-storage
 ingress:
   class: traefik
   create: true
-  host: k10.<dominio.com.br>
+  host: k10.dominio.com.br
   tls:
     enabled: true
     secretName: traefik-cert
