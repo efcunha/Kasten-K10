@@ -149,7 +149,6 @@ sa_secret=$(kubectl get serviceaccount kasten-sa -o jsonpath="{.secrets[0].name}
 
 kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
-
 # Local de armazenamento de arquivo NFS
 
 Requisitos:
