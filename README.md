@@ -149,6 +149,61 @@ sa_secret=$(kubectl get serviceaccount kasten-sa -o jsonpath="{.secrets[0].name}
 
 kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
+
+# Configurar Generic Storage Backup and Restore
+
+Local de armazenamento de arquivo NFS
+
+Requisitos:
+
+Um servidor NFS acessível a partir dos nós onde o K10 está instalado
+
+Um compartilhamento NFS exportado, montado em todos os nós onde o K10 está instalado
+
+Um volume persistente que define o compartilhamento NFS exportado semelhante ao exemplo abaixo: 
+```sh
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+   name: test-pv
+spec:
+   capacity:
+      storage: 100Gi
+   volumeMode: Filesystem
+   accessModes:
+      - ReadWriteMany
+   persistentVolumeReclaimPolicy: Recycle
+   storageClassName: managed-nfs-storage
+   mountOptions:
+      - hard
+      - nfsvers=4.1
+   nfs:
+      path: /opt/backup
+      server: 172.16.0.22
+``` 
+Criar um Persistent Volume Claim com o mesmo nome de classe de armazenamento no namespace K10 (padrão kasten-io):
+```sh
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+   name: test-pvc
+   namespace: kasten-io
+spec:
+   storageClassName: managed-nfs-storage
+   accessModes:
+      - ReadWriteMany
+   resources:
+      requests:
+         storage: 100Gi
+``` 
+Uma vez que os requisitos acima sejam atendidos, um perfil de localização NFS FileStore pode ser criado na página de perfis usando o PVC criado acima. 
+
+![location_profiles_nfs1](https://user-images.githubusercontent.com/52961166/140244175-9c02dc2c-5285-4cf3-82a9-fc21182a3e0c.png)
+
+Quando Validar e Salvar for selecionado, o perfil de configuração será criado e um perfil semelhante ao seguinte aparecerá:
+
+![location_profiles_example_nfs1](https://user-images.githubusercontent.com/52961166/140244284-95d3a8d1-8a73-4cd8-b829-a3b9b25ee2dc.png)
+
 # Varias leituras de referencias que podem ajudar em uma melhor implementação.
 
 https://veducate.co.uk/kasten-multi-cluster/
