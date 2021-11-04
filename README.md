@@ -212,7 +212,7 @@ Da mesma forma, os perfis de localização também são usados para importar apl
 # Notas:
 No caso de local de armazenamento de arquivo NFS, o compartilhamento NFS exportado deve ser acessível a partir do cluster de destino e montado em todos os nós onde o K10 está instalado.
 
-# Varias leituras de referencias que podem ajudar em uma melhor implementação.
+# Varias leituras de referencias:
 
 https://veducate.co.uk/kasten-multi-cluster/
 
