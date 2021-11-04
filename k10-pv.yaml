@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+   name: teste-pv
+spec:
+   capacity:
+      storage: 100Gi
+   volumeMode: Filesystem
+   accessModes:
+      - ReadWriteMany
+   persistentVolumeReclaimPolicy: Recycle
+   storageClassName: managed-nfs-storage
+   mountOptions:
+      - hard
+      - nfsvers=4.1
+   nfs:
+      path: /opt/backup
+      server: 172.16.0.22
