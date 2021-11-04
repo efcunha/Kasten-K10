@@ -204,6 +204,13 @@ Quando Validar e Salvar for selecionado, o perfil de configuração será criado
 
 ![location_profiles_example_nfs1](https://user-images.githubusercontent.com/52961166/140244284-95d3a8d1-8a73-4cd8-b829-a3b9b25ee2dc.png)
 
+# Configurações de localização para migração
+
+Se o perfil de localização for usado para exportar um aplicativo para migração entre clusters, ele será usado para armazenar metadados de ponto de restauração de aplicativos e, ao mover entre provedores de infraestrutura, também dados em massa. Da mesma forma, os perfis de localização também são usados para importar aplicativos para um cluster diferente do cluster de origem em que o aplicativo foi capturado.
+
+# Notas:
+No caso de local de armazenamento de arquivo NFS, o compartilhamento NFS exportado deve ser acessível a partir do cluster de destino e montado em todos os nós onde o K10 está instalado.
+
 # Varias leituras de referencias que podem ajudar em uma melhor implementação.
 
 https://veducate.co.uk/kasten-multi-cluster/
