@@ -94,11 +94,11 @@ global:
     storageClass: managed-nfs-storage
 grafana:
   persistence:
-    storageClass: managed-nfs-storage
+    storageClassName: managed-nfs-storage
 ingress:
   class: traefik
   create: true
-  host: k10.<dominio.com.br>
+  host: k10.dominio.com.br
   tls:
     enabled: true
     secretName: traefik-cert
@@ -142,18 +142,87 @@ Este token pode ser copiado para nossa área de transferência e copiado para o 
 
 ```sh  
 kubectl create serviceaccount kasten-sa --namespace kasten-io
+
 kubectl create clusterrolebinding kasten-sa --clusterrole=cluster-admin --serviceaccount=kasten-io:kasten-sa
+
 sa_secret=$(kubectl get serviceaccount kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
+
 kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
-# Varias leituras de referencias que podem ajudar em uma melhor implementação.
+
+# Local de armazenamento de arquivo NFS
+
+Requisitos:
+
+Um servidor NFS acessível a partir dos nós onde o K10 está instalado
+
+Um compartilhamento NFS exportado, montado em todos os nós onde o K10 está instalado
+
+Um volume persistente que define o compartilhamento NFS exportado semelhante ao exemplo abaixo: 
+```sh
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+   name: test-pv
+spec:
+   capacity:
+      storage: 100Gi
+   volumeMode: Filesystem
+   accessModes:
+      - ReadWriteMany
+   persistentVolumeReclaimPolicy: Recycle
+   storageClassName: managed-nfs-storage
+   mountOptions:
+      - hard
+      - nfsvers=4.1
+   nfs:
+      path: /opt/backup
+      server: 172.16.0.22
+``` 
+Criar um Persistent Volume Claim com o mesmo nome de classe de armazenamento no namespace K10 (padrão kasten-io):
+```sh
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+   name: test-pvc
+   namespace: kasten-io
+spec:
+   storageClassName: managed-nfs-storage
+   accessModes:
+      - ReadWriteMany
+   resources:
+      requests:
+         storage: 100Gi
+``` 
+Uma vez que os requisitos acima sejam atendidos, um perfil de localização NFS FileStore pode ser criado na página de perfis usando o PVC criado acima. 
+
+![location_profiles_nfs1](https://user-images.githubusercontent.com/52961166/140244175-9c02dc2c-5285-4cf3-82a9-fc21182a3e0c.png)
+
+Quando Validar e Salvar for selecionado, o perfil de configuração será criado e um perfil semelhante ao seguinte aparecerá:
+
+![location_profiles_example_nfs1](https://user-images.githubusercontent.com/52961166/140244284-95d3a8d1-8a73-4cd8-b829-a3b9b25ee2dc.png)
+
+# Configurações de localização para migração
+
+Se o perfil de localização for usado para exportar um aplicativo para migração entre clusters, ele será usado para armazenar metadados de ponto de restauração de aplicativos e para mover entre provedores de infraestrutura, e utlizado também para dados em massa. 
+Da mesma forma, os perfis de localização também são usados para importar aplicativos para um cluster diferente do cluster de origem em que o aplicativo foi capturado.
+
+# Notas:
+No caso de local de armazenamento de arquivo NFS, o compartilhamento NFS exportado deve ser acessível a partir do cluster de destino e montado em todos os nós onde o K10 está instalado.
+
+# Varias leituras de referencias:
 
 https://veducate.co.uk/kasten-multi-cluster/
-https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
-https://www.luizpessol.com.br/2021/07/28/backup-kubernetes-com-kasten-k10/
-https://www.infracloud.io/blogs/k8s-disaster-recovery-using-kasten-k10/
-https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
-https://www.unixarena.com/2021/09/kubernetes-backup-kasten-k10-test-drive.html/
-https://veducate.co.uk/kasten-tanzu/
 
+https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
+
+https://www.luizpessol.com.br/2021/07/28/backup-kubernetes-com-kasten-k10/
+
+https://www.infracloud.io/blogs/k8s-disaster-recovery-using-kasten-k10/
+
+https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
+
+https://www.unixarena.com/2021/09/kubernetes-backup-kasten-k10-test-drive.html/
+
+https://veducate.co.uk/kasten-tanzu/
 
