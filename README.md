@@ -33,44 +33,10 @@ Bom galera, era isso que eu tinha para vocês hoje, espero que gostem do conteú
 
 # O CSI snapshotter faz parte da implementação do Kubernetes de Container Storage Interface (CSI).
 
-https://github.com/kubernetes-csi/external-snapshotter
-
 Instalar the CSI snapshotter
 
-Aplicar VolumeSnapshot CRDs
-```sh
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
-```
-Faça isso uma vez por cluster 
+https://github.com/kubernetes-csi/external-snapshotter
 
-Instalar Common Snapshot Controller:
-
-Atualize o namespace para um valor apropriado para seu ambiente (por exemplo, kube-system) 
-```sh
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
-```
-Faça isso uma vez por cluster 
-
-# Instalar CSI Driver:
-
-Siga as instruções fornecidas pelo fornecedor do driver CSI. 
-```sh
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/deploy/kubernetes/csi-snapshotter/rbac-csi-snapshotter.yaml
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/deploy/kubernetes/csi-snapshotter/rbac-external-provisioner.yaml
-kubectl apply -f https://github.com/kubernetes-csi/external-snapshotter/blob/master/deploy/kubernetes/csi-snapshotter/setup-csi-snapshotter.yaml
-```
-Aqui está um exemplo para instalar o driver hostpath CSI de amostra 
-```sh
-git clone https://github.com/kubernetes-csi/csi-driver-host-path.git
-cd csi-driver-host-path
-```
-Escola a versão do seu Kubernetes e faça o deploy 
-```sh
-./deploy/kubernetes-x.xx/deploy.sh
-```
 # Verificar requisitos para instalação
 
 curl https://docs.kasten.io/tools/k10_primer.sh | bash
