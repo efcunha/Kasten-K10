@@ -91,7 +91,10 @@ services:
 
 ```sh  
 kubectl create namespace kasten-io; \
-  helm install k10 kasten/k10 --namespace=kasten-io -f values.yaml
+  helm install k10 kasten/k10 --namespace=kasten-io -f values.yaml \
+  --set injectKanisterSidecar.enabled=true \
+  --set-string injectKanisterSidecar.objectSelector.matchLabels.component=db \
+  --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
 ```
 Depois de alguns minutos, podemos verificar se todos os pods estão funcionando.
 
