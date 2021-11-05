@@ -277,6 +277,7 @@ Status:
   Attached:  true
 Events:      <none>
 ```
+From the root directory, delete the application pods including a storage class, a PVC.
 
 ```shell
 for i in ./examples/csi-storageclass.yaml ./examples/csi-pvc.yaml ./examples/csi-app.yaml; do kubectl delete -f $i; done
