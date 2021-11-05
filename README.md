@@ -35,7 +35,7 @@ Bom galera, era isso que eu tinha para vocês hoje, espero que gostem do conteú
 
 Instalar the CSI snapshotter
 
-https://github.com/kubernetes-csi/external-snapshotter
+https://github.com/efcunha/Kasten-K10/blob/main/csi-driver-host-path/README.md
 
 # Verificar requisitos para instalação
 
