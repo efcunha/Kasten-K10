@@ -38,13 +38,13 @@ Instalar the CSI snapshotter
 https://github.com/efcunha/Kasten-K10/blob/main/csi-driver-host-path/README.md
 
 # Verificar requisitos para instalação
-
+```sh  
 curl https://docs.kasten.io/tools/k10_primer.sh | bash
-
+```
 Adicionar repositorio Helm do Kastetn.io
-
+```sh  
 helm repo add kasten https://charts.kasten.io/
-
+```
 Criar arquivo de anotações values.yaml
 
 ```sh  
