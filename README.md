@@ -110,13 +110,14 @@ Para isso, precisamos criar uma conta de serviço e obter o token para essa cont
 Este token pode ser copiado para nossa área de transferência e copiado para o campo de autenticação na próxima etapa.
 
 ```sh  
-kubectl create serviceaccount kasten-sa --namespace kasten-io
+# Assume K10 is installed in the 'kasten-io' namespace
+# Extracting token from SA 'my-kasten-sa'
 
-kubectl create clusterrolebinding kasten-sa --clusterrole=cluster-admin --serviceaccount=kasten-io:kasten-sa
+# get the SA secret
+sa_secret=$(kubectl get serviceaccount my-kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
 
-sa_secret=$(kubectl get serviceaccount kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
-
-kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'\n'}" | base64 --decode
+# extract token
+kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
 # Local de armazenamento de arquivo NFS
 
