@@ -41,6 +41,10 @@ https://github.com/efcunha/Kasten-K10/blob/main/csi-driver-host-path/README.md
 ```sh  
 curl https://docs.kasten.io/tools/k10_primer.sh | bash
 ```
+Em seguida, execute o seguinte comando com um StorageClass válido para implantar a ferramenta de pré-verificação:
+```sh  
+curl -s https://docs.kasten.io/tools/k10_primer.sh  | bash /dev/stdin -s ${STORAGE_CLASS}
+```
 Adicionar repositorio Helm do Kastetn.io
 ```sh  
 helm repo add kasten https://charts.kasten.io/
