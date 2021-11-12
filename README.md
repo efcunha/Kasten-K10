@@ -180,6 +180,15 @@ Quando Validar e Salvar for selecionado, o perfil de configuração será criado
 Se o perfil de localização for usado para exportar um aplicativo para migração entre clusters, ele será usado para armazenar metadados de ponto de restauração de aplicativos e para mover entre provedores de infraestrutura, e utlizado também para dados em massa. 
 Da mesma forma, os perfis de localização também são usados para importar aplicativos para um cluster diferente do cluster de origem em que o aplicativo foi capturado.
 
+# Upgrade de versão K10 Kasten
+```sh
+helm repo update && \
+  helm get values k10 --output yaml --namespace=kasten-io > k10_val.yaml && \
+  helm upgrade k10 kasten/k10 --namespace=kasten-io -f k10_val.yaml \
+  --set injectKanisterSidecar.enabled=true \
+  --set-string injectKanisterSidecar.objectSelector.matchLabels.component=db \
+  --set-string injectKanisterSidecar.namespaceSelector.matchLabels.k10/injectKanisterSidecar=true
+```
 # Notas:
 No caso de local de armazenamento de arquivo NFS, o compartilhamento NFS exportado deve ser acessível a partir do cluster de destino e montado em todos os nós onde o K10 está instalado.
 
