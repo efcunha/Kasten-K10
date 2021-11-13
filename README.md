@@ -114,13 +114,13 @@ Para isso, precisamos criar uma conta de serviço e obter o token para essa cont
 Este token pode ser copiado para nossa área de transferência e copiado para o campo de autenticação na próxima etapa.
 
 ```sh  
-# Assume K10 is installed in the 'kasten-io' namespace
-# Extracting token from SA 'my-kasten-sa'
+# Suponha que K10 esteja instalado no namespace 'kasten-io'
+# Extraindo token de SA 'my-kasten-sa' 
 
-# get the SA secret
+# obter o segredo SA
 sa_secret=$(kubectl get serviceaccount my-kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
 
-# extract token
+# extrair o token
 kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
 # Local de armazenamento de arquivo NFS
