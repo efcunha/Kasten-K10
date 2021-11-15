@@ -1,35 +1,37 @@
 ## Cluster setup
 
-For Kubernetes 1.17+, some initial cluster setup is required to install the following:
+Para Kubernetes 1.17+, alguma configuração inicial de cluster é necessária para instalar o seguinte: 
 
 - CSI VolumeSnapshot beta CRDs (custom resource definitions)
 - Snapshot Controller
 
-### Check if cluster components are already installed
-Run the follow commands to ensure the VolumeSnapshot CRDs have been installed:
+### Verifique se os componentes do cluster já estão instalados 
+
+Execute os comandos a seguir para garantir que os CRDs VolumeSnapshot foram instalados: 
 ```
 $ kubectl get volumesnapshotclasses.snapshot.storage.k8s.io 
 $ kubectl get volumesnapshots.snapshot.storage.k8s.io 
 $ kubectl get volumesnapshotcontents.snapshot.storage.k8s.io
 ```
-If any of these commands return the following error message, you must install the corresponding CRD:
+Se algum desses comandos retornar a seguinte mensagem de erro, você deve instalar o CRD correspondente: 
 ```
 error: the server doesn't have a resource type "volumesnapshotclasses"
 ```
 
-Next, check if any pods are running the snapshot-controller image:
+Em seguida, verifique se algum pod está executando a imagem do controlador de instantâneo: 
 ```
 $ kubectl get pods --all-namespaces -o=jsonpath='{range .items[*]}{"\n"}{range .spec.containers[*]}{.image}{", "}{end}{end}' | grep snapshot-controller
 quay.io/k8scsi/snapshot-controller:v2.0.1, 
 ```
 
-If no pods are running the snapshot-controller, follow the instructions below to create the snapshot-controller
+Se nenhum pod estiver executando o controlador de instantâneo, siga as instruções abaixo para criar o controlador de instantâneo
 
 __Note:__ The above command may not work for clusters running on managed k8s services. In this case, the presence of all VolumeSnapshot CRDs is an indicator that your cluster is ready for hostpath deployment.
 
-### VolumeSnapshot CRDs and snapshot controller installation
-Run the following commands to install these components: 
-```shell
+### VolumeSnapshot CRDs e instalação do controlador de instantâneo
+
+Execute os seguintes comandos para instalar esses componentes:
+```sh
 # Change to the latest supported snapshotter version
 
 SNAPSHOTTER_VERSION=v2.0.1
@@ -48,20 +50,17 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snaps
 
 ## Deployment
 
-The easiest way to test the Hostpath driver is to run the `deploy.sh` script for the Kubernetes version used by
-the cluster as shown below for Kubernetes 1.17. This creates the deployment that is maintained specifically for that
-release of Kubernetes. However, other deployments may also work.
-
+A maneira mais fácil de testar o driver Hostpath é executar o script `deploy.sh` para a versão do Kubernetes usada por o cluster conforme mostrado abaixo para o Kubernetes 1.17. Isso cria a implantação que é mantida especificamente para aquele lançamento do Kubernetes. No entanto, outras implantações também podem funcionar. 
 ```
 # deploy hostpath driver
 
 deploy/kubernetes-x-xx/deploy.sh
 ```
 
-You should see an output similar to the following printed on the terminal showing the application of rbac rules and the
-result of deploying the hostpath driver, external provisioner, external attacher and snapshotter components. Note that the following output is from Kubernetes 1.17:
+Você deve ver uma saída semelhante à seguinte impressa no terminal, mostrando a aplicação das regras rbac e o resultado da implantação do driver hostpath, provisionador externo, anexador externo e componentes do snapshotter. 
 
-```shell
+Observe que a seguinte saída é do Kubernetes 1.17: 
+```sh
 applying RBAC rules
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-provisioner/v1.5.0/deploy/kubernetes/rbac.yaml
 serviceaccount/csi-provisioner created
@@ -124,9 +123,11 @@ volumesnapshotclass.snapshot.storage.k8s.io/csi-hostpath-snapclass created
 
 The [livenessprobe side-container](https://github.com/kubernetes-csi/livenessprobe) provided by the CSI community is deployed with the CSI driver to provide the liveness checking of the CSI services.
 
-## Run example application and validate
+## Execute o aplicativo de exemplo e valide
 
-Next, validate the deployment.  First, ensure all expected pods are running properly including the external attacher, provisioner, snapshotter and the actual hostpath driver plugin:
+Em seguida, valide a implantação.
+
+Primeiro, certifique-se de que todos os pods esperados estejam funcionando corretamente, incluindo o anexador externo, o provisionador, o snapshotter e o plug-in do driver hostpath real: 
 
 ```shell
 kubectl get pods
@@ -140,18 +141,18 @@ csi-hostpathplugin-0         3/3     Running   0          4m20s
 snapshot-controller-0        1/1     Running   0          4m37s
 ```
 
-From the root directory, deploy the application pods including a storage class, a PVC, and a pod which mounts a volume using the Hostpath driver found in directory `./examples`:
+No diretório raiz, implante os pods do aplicativo, incluindo uma classe de armazenamento, um PVC e um pod que monta um volume usando o driver Hostpath encontrado no diretório `. /Examples`: 
 
-```shell
+```sh
 for i in ./examples/csi-storageclass.yaml ./examples/csi-pvc.yaml ./examples/csi-app.yaml; do kubectl apply -f $i; done
 storageclass.storage.k8s.io/csi-hostpath-sc created
 persistentvolumeclaim/csi-pvc created
 pod/my-csi-app created
 ```
 
-Let's validate the components are deployed:
+Vamos validar se os componentes estão implantados:
 
-```shell
+```sh
 kubectl get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             STORAGECLASS      REASON   AGE
 pvc-ad827273-8d08-430b-9d5a-e60e05a2bc3e   1Gi        RWO            Delete           Bound    default/csi-pvc   csi-hostpath-sc            45s
@@ -161,9 +162,9 @@ NAME      STATUS   VOLUME                                     CAPACITY   ACCESS 
 csi-pvc   Bound    pvc-ad827273-8d08-430b-9d5a-e60e05a2bc3e   1Gi        RWO            csi-hostpath-sc   94s
 ```
 
-Finally, inspect the application pod `my-csi-app`  which mounts a Hostpath volume:
+Finalmente, inspecione o pod de aplicativo `my-csi-app` que monta um volume Hostpath: 
 
-```shell
+```sh
 kubectl describe pods/my-csi-app
 Name:         my-csi-app
 Namespace:    default
@@ -225,24 +226,31 @@ Events:
   Normal  Started                 99s   kubelet, csi-prow-worker  Started container my-frontend
 ```
 
-## Confirm Hostpath driver works
-The Hostpath driver is configured to create new volumes under `/csi-data-dir` inside the hostpath container that is specified in the plugin StatefulSet found [here](../deploy/kubernetes-1.17/hostpath/csi-hostpath-plugin.yaml).  This path persist as long as the StatefulSet pod is up and running.
+## Confirme se o driver do Hostpath funciona
 
-A file written in a properly mounted Hostpath volume inside an application should show up inside the Hostpath container.  The following steps confirms that Hostpath is working properly.  First, create a file from the application pod as shown:
+O driver Hostpath é configurado para criar novos volumes em `/ csi-data-dir` dentro do contêiner hostpath especificado no plugin StatefulSet encontrado [aqui] (../deploy/kubernetes-1.17/hostpath/csi-hostpath-plugin .yaml). 
 
-```shell
+Esse caminho persiste enquanto o pod StatefulSet estiver ativo e em execução. 
+
+Um arquivo escrito em um volume Hostpath montado corretamente dentro de um aplicativo deve aparecer dentro do contêiner Hostpath. 
+
+As etapas a seguir confirmam que o Hostpath está funcionando corretamente. 
+
+Primeiro, crie um arquivo do pod do aplicativo, conforme mostrado: 
+
+```sh
 kubectl exec -it my-csi-app /bin/sh
 / # touch /data/hello-world
 / # exit
 ```
 
-Next, ssh into the Hostpath container and verify that the file shows up there:
+Em seguida, ssh no contêiner Hostpath e verifique se o arquivo aparece lá:
 
 ```shell
 kubectl exec -it $(kubectl get pods --selector app=csi-hostpathplugin -o jsonpath='{.items[*].metadata.name}') -c hostpath /bin/sh
 
 ```
-Then, use the following command to locate the file. If everything works OK you should get a result similar to the following:
+Em seguida, use o seguinte comando para localizar o arquivo. Se tudo funcionar bem, você deverá obter um resultado semelhante ao seguinte: 
 
 ```shell
 / # find / -name hello-world
@@ -251,9 +259,9 @@ Then, use the following command to locate the file. If everything works OK you s
 / # exit
 ```
 
-## Confirm the creation of the VolumeAttachment object
+## Confirme a criação do objeto VolumeAttachment
 
-An additional way to ensure the driver is working properly is by inspecting the VolumeAttachment API object created that represents the attached volume:
+Uma maneira adicional de garantir que o driver está funcionando corretamente é inspecionando o objeto da API VolumeAttachment criado que representa o volume anexado: 
 
 ```shell
 kubectl describe volumeattachment
@@ -277,7 +285,7 @@ Status:
   Attached:  true
 Events:      <none>
 ```
-From the root directory, delete the application pods including a storage class, a PVC.
+No diretório raiz, exclua os pods do aplicativo, incluindo uma classe de armazenamento, um PVC.
 
 ```shell
 for i in ./examples/csi-storageclass.yaml ./examples/csi-pvc.yaml ./examples/csi-app.yaml; do kubectl delete -f $i; done
