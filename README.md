@@ -167,6 +167,11 @@ spec:
       requests:
          storage: 100Gi
 ``` 
+Criar os volumes de armazenamento de arquivo no servidor NFS
+```sh
+kubectl apply -f k10-pv.yaml
+kubectl apply -f k10-pvc.yaml
+```
 Uma vez que os requisitos acima sejam atendidos, um perfil de localização NFS FileStore pode ser criado na página de perfis usando o PVC criado acima. 
 
 ![location_profiles_nfs1](https://user-images.githubusercontent.com/52961166/140244175-9c02dc2c-5285-4cf3-82a9-fc21182a3e0c.png)
@@ -207,4 +212,3 @@ https://horstmann.in/how-i-built-my-kubernetes-homelab-part-6/
 https://www.unixarena.com/2021/09/kubernetes-backup-kasten-k10-test-drive.html/
 
 https://veducate.co.uk/kasten-tanzu/
-
