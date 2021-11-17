@@ -115,13 +115,15 @@ Este token pode ser copiado para nossa área de transferência e copiado para o 
 
 ```sh  
 # Suponha que K10 esteja instalado no namespace 'kasten-io'
-# Extraindo token de SA 'my-kasten-sa' 
+
+# Criar token usuario kasten-sa
+kubectl create clusterrolebinding kasten-sa --clusterrole=cluster-admin --serviceaccount=kasten-io:kasten-sa
 
 # obter o segredo SA
-sa_secret=$(kubectl get serviceaccount my-kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
+sa_secret=$(kubectl get serviceaccount kasten-sa -o jsonpath="{.secrets[0].name}" --namespace kasten-io)
 
 # extrair o token
-kubectl get secret $sa_secret --namespace kasten-io -ojsonpath="{.data.token}{'\n'}" | base64 --decode
+kubectl get secret $sa_secret --namespace kasten-io -o jsonpath="{.data.token}{'\n'}" | base64 --decode
 ```
 # Local de armazenamento de arquivo NFS
 
